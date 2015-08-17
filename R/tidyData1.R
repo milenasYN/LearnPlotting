@@ -1,3 +1,4 @@
+
 #Because weather reporting early in the dataset was sporatic, we are going to evalaute wehtehr events later than 1995
 workingData$BGN_DATE <- mdy_hms(workingData$BGN_DATE)
 workingData <- workingData %>% filter(year(BGN_DATE) > 2000)
