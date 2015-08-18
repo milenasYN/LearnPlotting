@@ -1,0 +1,62 @@
+hist(activityDateStep$total, main="Frequency of the Number of Steps Taken Daily", xlab="Steps", breaks=15)
+abline(v=mean(activityDateStep$total), lty=4, col="red")
+text(9500, 14, "Mean",col="red", pos=2)
+text(9500,13,format(mean(activityDateStep$total), digits=1),col="red", pos=2)
+abline(v=median(activityDateStep$total), lty=2, col="blue")
+text(10100, 14, "Median",col="blue", pos=4)
+text(10100, 13, median(activityDateStep$total),col="blue", pos=4)
+
+aveSteps <- activity %>% group_by(interval) %>% summarize(steps=mean(steps, na.rm=TRUE))
+
+plot(aveSteps, type="l", main="Time Series: Average Number of Steps", xlab="5-Minute Interval",
+     ylab="Ave steps taken")
+maxInterval<-aveSteps[which.max(aveSteps$steps),1]
+abline(v=maxInterval, lty=2, col="blue")
+text(maxInterval, 180, "Interval - Max Steps",col="blue", pos=4)
+text(maxInterval, 170, maxInterval, col="blue", pos=4)
+
+maxSteps <- filter(aveSteps, interval==maxInterval$interval)
+
+sumNA <- sum(is.na(activity$steps))
+
+activityNEW <- activity #Make copy of the data
+#Goup data by interval and then find the interval mean
+activityIntervalStepAve <- activityNEW %>% group_by(interval) %>% summarize(average=mean(steps, na.rm=TRUE))
+activityIntervalStepAve %>% sample_n(5) #Take a look at 5 random records
+#The code below retrieves the position of the average steps for the interval in the second argument that is equal to
+#the interval in the dataset activityNEW$interval.This position number is then used to subset the 2nd argument to get
+#the average step value and put that in the newcolumn called average in the dataset actvityNEW
+activityNEW$average <- activityIntervalStepAve$average[activityIntervalStepAve$interval %in% activityNEW$interval]
+
+activityNEW %>% sample_n(5)
+#Where NA exists in the steps column, replace with the interval average
+#Info on using replace with NA values found here:  http://rprogramming.net/recode-data-in-r/
+activityNEW <- activityNEW %>% mutate(steps=ifelse(is.na(activityNEW$steps),activityNEW$average, activityNEW$steps))
+activityNEW %>% sample_n(5)
+
+activityDateStep2 <- activityNEW %>% group_by(date) %>% summarize(total=sum(steps, na.rm=TRUE))
+
+#Write the new histogram
+hist(activityDateStep2$total, main="Frequency of the Number of Steps Taken Daily", xlab="Steps", breaks=15)
+abline(v=mean(activityDateStep2$total), lty=4, col="red")
+text(9500, 14, "Mean",col="red", pos=2)
+text(9500,13,format(mean(activityDateStep2$total), digits=1),col="red", pos=2)
+abline(v=median(activityDateStep2$total), lty=2, col="blue")
+text(10100, 14, "Median",col="blue", pos=4)
+text(10100, 13, format(median(activityDateStep2$total), digits=1),col="blue", pos=4)
+
+
+# Calculate the weekdays
+dayType <- weekdays(activityNEW$date)
+# Assign the weekdays and the weekends to the data set
+dayType <- ifelse(test = dayType %in% c("Saturday", "Sunday"), yes="weekend", "weekday")
+activityNEW$dayType <- as.factor(dayType)
+
+aveStepsInt <- activityNEW %>% group_by(interval) %>% summarize(steps=mean(steps, na.rm=TRUE))
+
+par(mfrow = c(2, 1))
+for (type in c("weekend", "weekday")) {
+     steps.type <- aggregate(steps ~ interval, data = activityNEW, subset = activityNEW$dayType ==
+                                  type, FUN = mean)
+     plot(steps.type, type = "l", main = type)
+}
