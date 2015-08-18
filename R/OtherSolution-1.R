@@ -61,10 +61,6 @@ totalsPlotNEWGather <- totalsPlot1[1:10,]
 totalsPlotNEWGather <- totalsPlotNEWGather %>%
      gather(PhysicalHarm, Injuries, FATALITIES:INJURIES)
 
-ggplot(totalsPlotNEWGather, aes(x=EVTYPE, y=Injuries, fill=PhysicalHarm, order=desc(PhysicalHarm))) + ###Working
-     geom_bar(stat="identity") +
-     theme(axis.text.x = element_text(angle = 60, hjust = 1))
-     #guides(fill=guide_legend(reverse=TRUE))
 
 ggplot(totalsPlotNEWGather, aes(x=reorder(EVTYPE, -totalDeathInjury), y=Injuries, fill=PhysicalHarm, order=desc(PhysicalHarm))) + #works
      geom_bar(stat="identity") +
@@ -73,7 +69,8 @@ ggplot(totalsPlotNEWGather, aes(x=reorder(EVTYPE, -totalDeathInjury), y=Injuries
      ggtitle(paste("Most Harmful Weather Events ")) +
      xlab("Weather Event") + ylab("Total Deaths and Injuries") +
      theme(legend.position=c(.9,.9))  +
-     scale_fill_brewer(palette = "Dark2") #http://www.cookbook-r.com/Graphs/Colors_(ggplot2)
+     scale_fill_brewer(palette = "Dark2", labels=c("Fatalities", "Injuries")) + #http://www.cookbook-r.com/Graphs/Colors_(ggplot2)
+     labs(fill="Physical Harm")
 ##############MORE CHANGES#############################
 
 ##############MORE CHANGES#############################SIDE BY SIDE BAR CHART WORKING
@@ -87,14 +84,15 @@ ggplot(totalsPlotNEW2, aes(x=reorder(EVTYPE, -totalDeathInjury), y=Injuries, fil
      ggtitle(paste("Most Harmful Weather Events ")) +
      xlab("Weather Event") + ylab("Total Deaths and Injuries") +
      theme(legend.position=c(.9,.9))  +
-     scale_fill_brewer(palette = "Dark2") #http://www.cookbook-r.com/Graphs/Colors_(ggplot2)
+     scale_fill_brewer(palette = "Dark2", labels=c("Fatalities", "Injuries")) + #http://www.cookbook-r.com/Graphs/Colors_(ggplot2)
+     labs(fill="Physical Harm")
 
 ##############MORE CHANGES#############################
 
 ################ORIGINAL######################################
 decode.units <- function(d) {
-     switch(d, H = 100, K = 1000, M = 1e+06, B = 1e+09, `0` = 1, `1` = 10, `2` = 100, `3` = 1000, `4` = 10000,  `5` = 1e+05, `6` = 1e+06, `7` = 1e+07, `8` = 1e+08, `9` = 1e+09, 0)
-}
+     switch(d, H = 100, K = 1000, M = 1e+06, B = 1e+09, `0` = 1, `1` = 10, `2` = 100, `3` = 1000,
+            `4` = 10000,  `5` = 1e+05, `6` = 1e+06, `7` = 1e+07, `8` = 1e+08, `9` = 1e+09, 0)}
 
 #Next, we calculate the total economic damage.
 storm_subs$DAMAGE <- storm_subs$PROPDMG * sapply(storm_subs$PROPDMGEXP, decode.units) + storm_subs$CROPDMG * sapply(storm_subs$CROPDMGEXP, decode.units)
@@ -107,3 +105,31 @@ ggplot(damage.top, aes(x = reorder(EVTYPE, -DAMAGE), y = DAMAGE)) + geom_bar(sta
      theme(axis.text.x = element_text(angle = 90, hjust = 1)) + xlab(NULL) +
      ylab("Damage in $") + ggtitle(paste("Top 20 events which have the greatest economic consequences in the United States"))
 ################ORIGINAL######################################
+
+################MY CODE###################################WORKING
+totalsPlot3 <- totals %>% arrange(desc(totalDollarLost))
+totalsPlotNEW3 <- totalsPlot2[1:10,]
+totalsPlotNEW3 <- totalsPlotNEW3 %>%
+     gather(dollarHarm, dollarDamage, PROPDMG:CROPDMG)
+ggplot(totalsPlotNEW3, aes(x=reorder(EVTYPE, -totalDollarLost), y=dollarDamage/1000000000, fill=dollarHarm)) + #Good side by side
+     geom_bar(stat="identity", position = position_dodge()) +
+     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+     #geom_text(aes(label=totalDeathInjury)) +
+     ggtitle(paste("Most Costly Weather Events ")) +
+     xlab("Weather Event") + ylab("Total Economic Cost - Billions $") +
+     theme(legend.position=c(.9,.9))  +
+     scale_fill_brewer(palette = "Dark2", labels=c("Property", "Crop")) + #http://www.cookbook-r.com/Graphs/Colors_(ggplot2)
+     labs(fill="Cost")
+
+ggplot(totalsPlotNEW3, aes(x=reorder(EVTYPE, -totalDollarLost), y=dollarDamage/1000000000, fill=dollarHarm, order=desc(dollarHarm))) + #works
+     geom_bar(stat="identity") +
+     theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+     #geom_text(aes(label=totalDeathInjury)) +
+     ggtitle(paste("Most Costly Weather Events ")) +
+     xlab("Weather Event") + ylab("Total Economic Cost - Billions $") +
+     theme(legend.position=c(.9,.9))  +
+     scale_fill_brewer(palette = "Dark2", labels=c("Property", "Crop")) + #http://www.cookbook-r.com/Graphs/Colors_(ggplot2)
+     labs(fill="Cost")
+
+
+################MY CODE######################################
