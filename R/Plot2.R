@@ -12,16 +12,21 @@ ggplot(activityDateStep, aes(x=total)) + geom_histogram(binwidth = 30)
 ggplot(activityDateStep, aes(x=total)) + geom_histogram(binwidth = 1000)
 ggplot(activityDateStep, aes(x=total)) + geom_histogram(binwidth = 2500)
 
-ggplot(activityDateStep, aes(x=total)) + geom_histogram(binwidth = 1000) +
-     labs(title = "Test Histogram Plot") +
-     labs(x="No of Steps", y="Frequency")
+ggplot(activityDateStep, aes(x=total)) +
+     geom_histogram(binwidth = 1000, col="red", fill="green", alpha=.2)
 
-ggplot(activityDateStep, aes(x=total)) + geom_histogram(breaks=seq(20, 50, by = 2),
-                                                        col="red",
-                                                        fill="green",
-                                                        alpha = .2) +
-     labs(title = "Test Histogram Plot") +
-     labs(x="No of Steps", y="Frequency")
+ggplot(activityDateStep, aes(x=total)) +
+     geom_histogram(binwidth = 2500, aes(fill = ..count..))
+
+ggplot(activityDateStep, aes(x=total)) +
+     geom_histogram(binwidth = 2500, aes(fill = ..count..)) +
+     scale_fill_gradient("Count", low = "green", high = "red") +
+     coord_flip()
+
+#Density Plot#
+ggplot(activityDateStep, aes(x=total)) + geom_density()
+
+
 
 ################ORIGINAL DATA#########################################
 hist(activityDateStep$total, main="Frequency of the Number of Steps Taken Daily", xlab="Steps", breaks=15)
