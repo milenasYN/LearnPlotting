@@ -1,3 +1,29 @@
+
+library(ggplot2)
+
+qplot(activityDateStep$total, geom="histogram") #qplot is supposed to make the same graph as ggplot(), but with a simpler syntax.
+#While ggplot() allows for maximum features and flexibility, qplot() is a simpler but less customizable wrapper around ggplot.
+#Note in practice, ggplot() is used more often.
+#See http://www.r-bloggers.com/how-to-make-a-histogram-with-ggplot2/
+#
+ggplot(activityDateStep, aes(x=total)) + geom_histogram()
+#specify a binwidth of 1 so that each column represents one discrete value of the data.  Since we have a lot of data, larger values work better
+ggplot(activityDateStep, aes(x=total)) + geom_histogram(binwidth = 30)
+ggplot(activityDateStep, aes(x=total)) + geom_histogram(binwidth = 1000)
+ggplot(activityDateStep, aes(x=total)) + geom_histogram(binwidth = 2500)
+
+ggplot(activityDateStep, aes(x=total)) + geom_histogram(binwidth = 1000) +
+     labs(title = "Test Histogram Plot") +
+     labs(x="No of Steps", y="Frequency")
+
+ggplot(activityDateStep, aes(x=total)) + geom_histogram(breaks=seq(20, 50, by = 2),
+                                                        col="red",
+                                                        fill="green",
+                                                        alpha = .2) +
+     labs(title = "Test Histogram Plot") +
+     labs(x="No of Steps", y="Frequency")
+
+################ORIGINAL DATA#########################################
 hist(activityDateStep$total, main="Frequency of the Number of Steps Taken Daily", xlab="Steps", breaks=15)
 abline(v=mean(activityDateStep$total), lty=4, col="red")
 text(9500, 14, "Mean",col="red", pos=2)
