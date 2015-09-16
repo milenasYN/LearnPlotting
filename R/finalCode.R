@@ -1,11 +1,19 @@
 #Wierd error:  ddply fails with: Error: argument "by" is missing, with no default
 ## In the help file the ddply function call should say "summarise" instead of "summarize".
 ##May have occurred because Hmisc was loaded last
-library(Hmisc)
-library(dplyr)#Required for some of the steps below
-library(ggplot2)#Required for some of the steps below
-library(tidyr)#Required for some of the steps below
-library(lubridate)#Required for some of the steps below
+##
+# library(Hmisc)
+# library(dplyr)#Required for some of the steps below
+# library(ggplot2)#Required for some of the steps below
+# library(tidyr)#Required for some of the steps below
+# library(lubridate)#Required for some of the steps below
+
+pkg <- c("Hmisc", "dyply", "ggplot2", "tidyr", "lubridate")
+inst <- pkg %in% installed.packages()
+if(length(pkg[!inst]) > 0) install.packages(pkg[!inst],repos='http://cran.rstudio.com/')
+lapply(pkg,require,character.only=TRUE)
+rm(list=c('pkg','inst'))
+
 
 if (!file.exists("../Class5Assign2/data/workingData.csv")) {
      download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2",
