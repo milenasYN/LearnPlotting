@@ -7,3 +7,6 @@ knitr::opts_knit$set(root.dir="..", cache=FALSE)
 ##Introduction
 Using data and concepts from JHU - Coursera Course Work, I have collected code examples and that can be leveragfe in the future.  Included in teh document are hints about things learned during the Coursera - JHU journey.
 ##Packages & Functions Used  
+
+
+http://rpubs.com/u2phan/ggplot2
