@@ -1,0 +1,19 @@
+
+edaPlot (openintro package)
+
+Use an interactive, exploratory plot function with a click-interface and eight graphing options. The type of plots generated are printed out in the console. To exit, click "exit" on the plot.
+◾dataFrame – A data frame.
+
+Example. Before using edaPlot, two outliers that truly don’t belong are removed from the marioKart data set, which is a data set concerning Ebay auctions of Mario Kart games on Ebay. (See Chapter 8 of OpenIntro Statistics.) By clicking on the options (axes left of variables or the plotting types), I generated seven interesting exploratory plots in under 2 minutes without any typing.
+
+Download the Code
+```{r} 
+#install.packages("openintro")
+library(openintro)
+
+data(marioKart)
+mk <- marioKart[marioKart$totalPr < 100,]
+edaPlot(mk)
+
+exit
+> 
