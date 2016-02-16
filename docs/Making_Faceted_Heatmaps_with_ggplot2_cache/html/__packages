@@ -1,0 +1,13 @@
+base
+data.table
+dplyr
+purrr
+tidyr
+lubridate
+countrycode
+ggplot2
+scales
+gridExtra
+ggthemes
+viridis
+DT
