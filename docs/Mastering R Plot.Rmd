@@ -1,0 +1,272 @@
+---
+title: "Mastering R Plot"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Part 1: colors, legends and lines
+
+This is the first post of three that will look at how to create graphics in R using the plot function from the base package. There are of course other packages to make cool graphs in R (like ggplot2 or lattice), but so far plot always gave me satisfaction.
+
+In this post we will see how to add information in basic scatterplots, how to draw a legend and finally how to add regression lines.
+
+**Data Simulation**
+```{r}
+#simulate some data
+dat<-data.frame(X=runif(100,-2,2),T1=gl(n=4,k=25,labels=c("Small","Medium","Large","Big")),Site=rep(c("Site1","Site2"),time=50))
+mm<-model.matrix(~Site+X*T1,dat)
+betas<-runif(9,-2,2)
+dat$Y<-rnorm(100,mm%*%betas,1)
+summary(dat)
+```
+
+**Adding colors**
+
+First plot adding colors for the different treatments, one way to do this is to pass a vector of colors to the col argument in the plot function.
+```{r}
+#select the colors that will be used
+library(RColorBrewer)
+#all palette available from RColorBrewer
+display.brewer.all()
+#we will select the first 4 colors in the Set1 palette
+cols<-brewer.pal(n=4,name="Set1")
+#cols contain the names of four different colors
+#create a color vector corresponding to levels in the T1 variable in dat
+cols_t1<-cols[dat$T1]
+#plot
+plot(Y~X,dat,col=cols_t1,pch=16)
+```
+
+**Change plotting symbols**
+
+We can also create a vector of plotting symbols to represent data from the two different sites, the different plotting symbols available can be seen [here](http://www.endmemo.com/program/R/pchsymbols.php).
+```{r}
+pch_site<-c(16,18)[factor(dat$Site)]
+#the argument that control the plotting symbols is pch
+plot(Y~X,dat,col=cols_t1,pch=pch_site)
+```
+
+**Add a legend to the graph**
+
+Now we should add a legend to the graph:
+```{r}
+plot(Y~X,dat,col=cols_t1,pch=pch_site)
+legend("topright",legend=paste(rep(c("Small","Medium","Large","Big"),times=2), 
+       rep(c("Site1","Site2"),each=4),sep=","),col=rep(cols,times=2),
+       pch=rep(c(16,18),each=4),bty="n",ncol=2,cex=0.7,pt.cex=0.7)
+```
+
+The first argument to legend is basically its position in the graph, then comes the text of the legend. Optionally one may also specify the colors, plotting symbols etc … of the legend symbol. Have a look at ?legend for more options.
+
+We can also add a legend outside of the graph by setting xpd=TRUE and by specifying the x and y coordinates of the legend.
+```{r}
+plot(Y~X,dat,col=cols_t1,pch=pch_site)
+legend(x=-1,y=13,legend=paste(rep(c("Small","Medium","Large","Big"),times=2),
+       rep(c("Site1","Site2"),each=4),sep=","),col=rep(cols,times=2),
+       pch=rep(c(16,18),each=4),bty="n",ncol=2,cex=0.7,pt.cex=0.7,xpd=TRUE)
+```
+
+**Add regression lines**
+
+The last thing we might want to add are regression lines
+```{r}
+#generate a new data frame with ordered X values
+new_X<-expand.grid(X=seq(-2,2,length=10),T1=c("Small","Medium","Large","Big"),Site=c("Site1","Site2"))
+#the model
+m<-lm(Y~Site+X*T1,dat)
+#get the predicted Y values
+pred<-predict(m,new_X)
+#plot
+xs<-seq(-2,2,length=10)
+plot(Y~X,dat,col=cols_t1,pch=pch_site)
+lines(xs,pred[1:10],col=cols[1],lty=1,lwd=3)
+lines(xs,pred[11:20],col=cols[2],lty=1,lwd=3)
+lines(xs,pred[21:30],col=cols[3],lty=1,lwd=3)
+lines(xs,pred[31:40],col=cols[4],lty=1,lwd=3)
+lines(xs,pred[41:50],col=cols[1],lty=2,lwd=3)
+lines(xs,pred[51:60],col=cols[2],lty=2,lwd=3)
+lines(xs,pred[61:70],col=cols[3],lty=2,lwd=3)
+lines(xs,pred[71:80],col=cols[4],lty=2,lwd=3)
+legend(x=-1, y=13, legend=paste(rep(c("Small","Medium","Large","Big"),times=2),rep(c("Site1","Site2"),each=4),sep=","),col=rep(cols,times=2),pch=rep(c(16,18),each=4),lwd=1,lty=rep(c(1,2),each=4), bty="n",ncol=2,cex=0.7,pt.cex=0.7,xpd=TRUE)
+```
+
+There is a whole bunch of function to draw elements within the plotting area, a few examples are: points, lines, rect, text. They are handy in many situations and are very similar of use.
+
+##Part 2: Axis
+
+The standard plot function in R allows extensive tuning of every element being plotted. There are, however, many possible ways and the standard help file are hard to grasp at the beginning. In this article we will see how to control every aspects of the axis (labels, tick marks …) in the standard plot function. 
+
+**Axis title and labels**
+
+Create some data and create a plot with default settings
+```{r}
+#some data
+x<-1:100
+y<-runif(100,-2,2)
+#a usual plot with per default settings
+plot(x,y)
+#changing the axis title is pretty straightforward
+plot(x,y,xlab="Index",ylab="Uniform draws")
+```
+
+The settings of the plot are usually controlled by the par function (see ?par for the many possible arguments), once the arguments are set in par they apply to all subsequent plots. Some arguments in par (for example cex.axis) can also be set in other plot functions like axis or text. When these arguments are set in these other functions they will then apply only to the current plot. One can then control if he/she wants all plots to be affected by the change or only the current one.
+
+```{r}
+#change the sizes of the axis labels and axis title
+op<-par(no.readonly=TRUE) #this is done to save the default settings 
+par(cex.lab=1.5,cex.axis=1.3)
+plot(x,y,xlab="Index",ylab="Uniform draws")
+#if we want big axis titles and labels we need to set more space for them
+par(mar=c(6,6,3,3),cex.axis=1.5,cex.lab=2)
+plot(x,y,xlab="Index",ylab="Uniform draws")
+```
+
+A handy function to gain deeper control into the axis is the axis function which can control among other things at which values the tick marks are drawn, what axis labels to put under the tick marks, the line type and width of the axis line, the width of the tick marks, the color of the tick marks and axis line. 
+```{r}
+#we can further control the axis using the axis function
+par(op) #re-set the plot to the default settings
+plot(x,y,xaxt="n") #this prevent the plotting of x-axis labels 
+axis(side=1,at=c(5,50,100)) #force the tick marks to be drawn at x=5, 50 and 100
+#one can also specify the labels at the tick marks
+plot(x,y,yaxt="n")
+axis(side=2,at=c(-2,0,2),labels=c("Small","Medium","Big"))
+#the axis function also control the axis line and tick marks
+plot(x,y)
+axis(side=3,at=c(5,25,75),lwd=4,lwd.ticks=2,col.ticks="red")
+#some time you may want to remove the box around the plot and only show the axis lines
+plot(x,y,bty="n",xaxt="n",yaxt="n")
+axis(side=1,at=seq(0,100,20),lwd=3)
+axis(side=2,at=seq(-2,2,2),lwd=3)
+```
+
+Also note that an R plot has four sides, starting on the bottom and going clockwise (ie side=3 correspond to the top of the graph).
+
+**Tick marks**
+
+Let’s turn now to the tick marks, they can also be controlled either from par or from axis.
+```{r}
+#tick marks finer control goes through par or axis
+par(tcl=0.4,mgp=c(1.5,0,0)) #tcl control the length of the tick marks
+#positive values will make the tick being drawn inside the plot
+#negative values will make tick go outside
+#mgp takes three values, the first one control how much line between plot and axis title
+#the second between plot and axis labels and the third between plot and axis line
+plot(x,y)
+#another example using axis
+par(op)
+plot(x,y,xaxt="n",yaxt="n",xlab="",ylab="")
+axis(side=1,at=seq(5,95,30),tcl=0.4,lwd.ticks=3,mgp=c(0,0.5,0))
+mtext(side=1,text="X axis",line=1.5) #cannot set the axis title with axis so need to use mtext
+axis(side=2,at=seq(-2,2,2),tcl=0.3,lwd.ticks=3,col.ticks="orange",mgp=c(0,0,2))
+mtext(side=2,text="Numbers taken randomly",line=2.2)
+```
+
+Here we saw a third additional function, mtext, which allow one to write text outside of the plotting area (I guess that mtext stands for “margin text”). We have to specify how far from the plotting region one wants to write the text with the line argument. This concept of lines is important to understand how to control spaces around the plotting region. We controlled it earlier in this post when I used the mar argument which sets how many lines are available on each sides of the plot. Let’s look at this in more details:
+```{r}
+#understanding the lines
+plot(1:10,1:10,xlab="",ylab="",xaxt="n",yaxt="n")
+for(i in 0:4){
+  mtext(side=1,text=paste0("Line ",i),line=i)
+}
+for(i in 0:3){
+  mtext(side=2,text=paste0("Line ",i),line=i)
+}
+#of course this can be changed with the mar argument in par
+par(mar=c(7,2,2,2))
+plot(1:10,1:10,xlab="",ylab="",xaxt="n",yaxt="n")
+for(i in 0:6){
+  mtext(side=1,text=paste0("Line ",i),line=i)
+}
+for(i in 0:1){
+  mtext(side=2,text=paste0("Line ",i),line=i)
+}
+```
+
+From this last graph it is easy to grasp that on each side of the plot there are a certain number of lines, have a look at par()$mar for the default numbers. Using this, one can control how much space to create around the plot but also where to write axis labels or titles. Next time we’ll extend this concept of margins by talking about the outer margins from the plot, until then happy plotting! 
+
+##Part 3: Outer margins
+
+```{r}
+#a plot has inner and outer margins
+#by default there is no outer margins
+par()$oma
+#but we can add some
+op<-par(no.readonly=TRUE)
+par(oma=c(2,2,2,2))
+plot(1,1,type="n",xlab="",ylab="",xaxt="n",yaxt="n")
+for(side in 1:4){
+  inner<-round(par()$mar[side],0)-1
+  for(line in 0:inner){
+   mtext(text=paste0("Inner line ",line),side=side,line=line)
+  }
+  outer<-round(par()$oma[side],0)-1
+   for(line in 0:inner){
+   mtext(text=paste0("Outer line ",line),side=side,line=line,outer=TRUE)
+  }
+}
+```
+From this plot we see that we can control outer margins just like we controlled inner margins using the par function. To write text in the outer margins with the mtext function we need to set outer=TRUE in the function call.
+
+Outer margins can be handy in various situations:
+```{r}
+#Outer margins are useful in various context
+#when axis label is long and one does not want to shrink plot area
+par(op)
+#example
+par(cex.lab=1.7)
+plot(1,1,ylab="A very very long axis title\nthat need special care",xlab="",type="n")
+#one option would be to increase inner margin size
+par(mar=c(5,7,4,2))
+plot(1,1,ylab="A very very long axis title\nthat need special care",xlab="",type="n")
+#sometime this is not desirable so one may plot the axis text outside of the plotting area
+par(op)
+par(oma=c(0,4,0,0))
+plot(1,1,ylab="",xlab="",type="n")
+mtext(text="A very very long axis title\nthat need special care",side=2,line=0,outer=TRUE,cex=1.7)
+```
+
+With outer margins we can write very long or very big axis labels or titles without having to “sacrifice” the size of the plotting region.
+
+This comes especially handy for multi-panel plots:
+```{r}
+#this is particularly useful when having a plot with multiple panels and similar axis labels
+par(op)
+par(oma=c(3,3,0,0),mar=c(3,3,2,2),mfrow=c(2,2))
+
+plot(1,1,ylab="",xlab="",type="n")
+plot(1,1,ylab="",xlab="",type="n")
+plot(1,1,ylab="",xlab="",type="n")
+plot(1,1,ylab="",xlab="",type="n")
+
+mtext(text="A common x-axis label",side=1,line=0,outer=TRUE)
+mtext(text="A common y-axis label",side=2,line=0,outer=TRUE)
+```
+
+And we can also add a common legend:
+
+```{r}
+set.seed(20160228)
+#outer margins can also be used for plotting legend in them
+x<-runif(10)
+y<-runif(10)
+cols<-rep(c("red","green","orange","yellow","black"),each=2)
+
+par(op)
+par(oma=c(2,2,0,4),mar=c(3,3,2,0),mfrow=c(2,2),pch=16)
+
+for(i in 1:4){
+  plot(x,y,col=cols,ylab="",xlab="")
+}
+
+mtext(text="A common x-axis label",side=1,line=0,outer=TRUE)
+mtext(text="A common y-axis label",side=2,line=0,outer=TRUE)
+
+legend(x=1,y=1.7,legend=LETTERS[1:5],col=unique(cols), pch=16,bty="n",xpd=NA)
+```
+
+An important point to note here is that the xpd argument in the legend function which control if all plot elements (ie points, lines, legend, text …) are clipped to the plotting region if it is set to FALSE (the default value). If it is set to TRUE all plot elements are clipped to the figure region (plot + inner margins) and if it is set to NA you can basically add plot elements everywhere in the device region (plot + inner margins + outer margins). In the example above we set it to NA. Note that the xpd argument can also be set within the par function, it is then applied to all subsequent plots.
+
+With all these tools in our hands we are now able to make our plots look just how we want them to. It is a matter of taste whether one prefer to use ggplot or plot to produce his/her final plots (I actually use them both) but I find that once one knows a bit about these funny arguments like cex, pch or oma it quickly gives what you want. 
