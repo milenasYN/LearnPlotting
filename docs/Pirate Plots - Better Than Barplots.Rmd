@@ -165,4 +165,109 @@ pirateplot(formula = weight ~ Diet,
           jitter.val = .00
 )
 
+##Updated April 8, 2016
+```
+See http://www.r-bloggers.com/the-new-and-improved-pirateplot-now-with-themes/?utm_source=feedburner&utm_medium=email&utm_campaign=Feed%3A+RBloggers+%28R+bloggers%29
+
+Let’s go over the changes! To use the latest version of the pirateplot() function, be sure to install the latest version of the yarrr package:
+```{r}
+# install.packages("devtools") # Only if you don't have the devtools library already installed
+library("devtools")
+install_github("ndphillips/yarrr")
+```
+Once you’ve installed the latest version, load the package with library()
+```{r}
+library("yarrr")
+```
+
+Now you’re ready to make some pirate plots! Here are the major updates to the function:
+
+###Opacity Themes
+
+The five critical aspects of a pirate plot are the bars, beans, points, (average) lines, and hdis. You can adjust the opacity of each of these elements with opacity arguments — such as bars.o, beans.o (etc.).
+
+The biggest update to pirateplot() is the addition of opacity themes which are designated by a new argument called theme.o. The input to this argument defines an opacity theme across all five elements. Themes 1, 2, and 3 create specific opacity values for each of the elements, while Theme 0 sets all opacities to 0. Thankfully, the themes just set default values for the individual element opacities — you can still override the opacities of any specific object within a theme by including an object specific opacity value.
+
+Here are examples of the three different themes applied to the ChickWeight dataset:
+
+####Theme 1
+
+Theme 1 emphasises the bar with light points and beans (I’ll use the appletv palette for this one)
+```{r}
+pirateplot(formula = weight ~ Diet,
+           data = ChickWeight,
+           main = "Theme 1nappletv palette",
+           theme.o = 1,
+           pal = "appletv")
+```
+
+####Theme 2
+
+Theme 2 emphasises the points and beans (using the southpark palette)
+```{R}
+pirateplot(formula = weight ~ Diet,
+           data = ChickWeight,
+           main = "Theme 2nsouthpark palette",
+           theme.o = 2,
+           pal = "southpark")
+```
+
+####Theme 3
+
+Theme 3 Emphases the 95% Highest Density Intervals (HDIs). Keep in mind that calculating HDIs can take a few seconds for each bean… Here I’ll use the Basel palette.
+```{R}
+pirateplot(formula = weight ~ Diet,
+           data = ChickWeight,
+           main = "Theme 3nbasel palette",
+           theme.o = 3,
+           pal = "basel")
+```
+
+####Theme 0
+
+In Theme 0, all opacities are set to 0 by default, so you can just individually specify the opacity of each element. In this example, I’ll turn the lines on full-blast, and turn the points on slighly. I’ll also increase the amount of jittering and size of the points. I’ll also use the google palette.
+```{R}
+pirateplot(formula = weight ~ Diet,
+           data = ChickWeight,
+           main = "Theme 0ngoogle palette",
+           pal = "google",
+           point.o = .2,
+           line.o = 1,
+           theme.o = 0,
+           line.lwd = 10,
+           point.pch = 16,
+           point.cex = 1.5,
+           jitter.val = .1)
+```
+
+Of course, you can still change the colors of the plotting elements with the par argument, and the background using the back.col argument. Here’s an x-ray version of Theme 3
+```{R}
+pirateplot(formula = weight ~ Diet,
+           data = ChickWeight,
+           main = "Theme 3nlight color with black background",
+           pal = "white",
+           theme.o = 3,
+           point.pch = 16,
+           back.col = gray(.2))
+```
+
+####Gridlines
+
+You can now include gridlines in your plot with the gl.col argument. Just specify the color of the lines and the function will put them in reasonable places. The following plot also shows how pirateplot() handles two independent variables:
+```{R}
+pirateplot(formula = weight ~ Diet + Time,
+           data = subset(ChickWeight, Time < 10),
+           theme.o = 2,
+           pal = "basel",
+           point.pch = 16,
+           gl.col = gray(.8),
+           main = "Two IVsnWith gridlines")
+```
+
+###Other minor changes
+
+I’ve also made the following smaller changes
+
+- The function no longer automatically sorts the levels of the IV. It will plot levels of the IV(s) in the order the are found in the original dataframe.
+- You can now manually change the color of the bar borders with the bar.border.col argument.
 
