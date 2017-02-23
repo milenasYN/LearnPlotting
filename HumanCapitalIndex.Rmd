@@ -1,43 +1,49 @@
-# Data science, artificial intelligence, automation, and other advanced technologies are reshaping the world.
-# # We're starting to see glimpses of it, for example the rapid emergence of self driving cars. Moreover, 
-# the changes brought about by technology will likely become more frequent and more dramatic in the next few years.
-# 
-# In fact, two MIT economist, Erik Brynjolfsson and Andrew McAfee, think that the emergence of AI and data 
-# driven technologies may be one of the most important events in all of human history. 
-# 
-# Risk and opportunity in the age of AI
-# 
-# They suggest that AI and automation will dramatically increase productivity and human development. 
-# In essence, AI, machine learning, and data-driven technology will free us from our cognitive limitations 
-# much like the engine freed us from our physical limitations. This will in turn lead to large gains 
-# in productivity.
-# 
-# But while AI and data-driven tech will likely increase productivity, they are also likely to lead to 
-# high levels of unemployment. As software and technology become more intelligent, they will replace people 
-# who don't have the right skills.
-# 
-# A critical factor for success: human capital
-# 
-# How can someone succeed in such an era?
-# 
-# Brynjolfsson and McAfee point out that one of the keys to success in the age of data, AI, and automation will be human capital.
-# 
-# As technology increasingly substitutes for people, one of the keys to success will be cutting-edge knowledge, 
-# judgement (particularly in complex domains), and creativity.
-# 
-# Mapping Human Capital
-# 
-# In thinking about this, I decided to map which countries have the highest levels of human capital, 
-# as measured by the World Economic Forum.
-# 
-# While the WEF's Human Capital Index is not a perfect index of cutting edge skill, it does provide a high-level 
-# view of the countries that may be better prepared for a changing, high-tech world.
-# 
-# One thing in particular that I'll note, is that this map effectively shows averages of national performance. 
-# Having said that, talent and innovation are known to be highly uneven geographically. There are "spikes." 
-# So even though this map shows countries' average performance, we'd likely see an even different story 
-# if we looked at cities (or even zip codes).
+---
+title: "Human Capital in the AI Age"
+output: html_document
+---
 
+
+Data science, artificial intelligence, automation, and other advanced technologies are reshaping the world.
+We're starting to see glimpses of it, for example the rapid emergence of self driving cars. Moreover, 
+the changes brought about by technology will likely become more frequent and more dramatic in the next few years.
+ 
+In fact, two MIT economist, Erik Brynjolfsson and Andrew McAfee, think that the emergence of AI and data 
+driven technologies may be one of the most important events in all of human history. 
+ 
+## Risk and opportunity in the age of AI
+ 
+They suggest that AI and automation will dramatically increase productivity and human development. 
+In essence, AI, machine learning, and data-driven technology will free us from our cognitive limitations 
+much like the engine freed us from our physical limitations. This will in turn lead to large gains 
+in productivity.
+ 
+But while AI and data-driven tech will likely increase productivity, they are also likely to lead to 
+high levels of unemployment. As software and technology become more intelligent, they will replace people 
+who don't have the right skills.
+ 
+## A critical factor for success: human capital
+ 
+How can someone succeed in such an era?
+ 
+Brynjolfsson and McAfee point out that one of the keys to success in the age of data, AI, and automation will be human capital.
+ 
+As technology increasingly substitutes for people, one of the keys to success will be cutting-edge knowledge, 
+judgement (particularly in complex domains)and creativity.
+ 
+## Mapping Human Capital
+# 
+In thinking about this, I decided to map which countries have the highest levels of human capital, 
+as measured by the World Economic Forum.
+ 
+While the WEF's Human Capital Index is not a perfect index of cutting edge skill, it does provide a high-level 
+view of the countries that may be better prepared for a changing, high-tech world.
+ 
+One thing in particular that I'll note, is that this map effectively shows averages of national performance. 
+Having said that, talent and innovation are known to be highly uneven geographically. There are "spikes." 
+So even though this map shows countries' average performance, we'd likely see an even different story 
+if we looked at cities (or even zip codes).
+```{r warning=FALSE, message=FALSE}
 #==============
 # LOAD PACKAGES
 #==============
@@ -149,7 +155,7 @@ df.human_capital$country_nm <- recode(df.human_capital$country_nm
                                       ,'Iran, Islamic Rep.'    = 'Iran'
                                       ,'Trinidad and Tobago'   = 'Trinidad'
                                       ,'Lao PDR'               = 'Laos'
-                                      )
+)
 
 #====================================================
 # JOIN HUMAN CAPITAL DATA TO MAP
@@ -188,3 +194,4 @@ ggplot(data = map.world, aes(x = long, y = lat, group = group)) +
            ,plot.title = element_text(size = 32)
            ,legend.position = c(.18,.375)
      ) 
+```
