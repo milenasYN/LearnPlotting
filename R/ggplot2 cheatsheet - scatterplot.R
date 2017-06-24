@@ -5,15 +5,14 @@
 ##ggplot2 cheatsheet
 ######################
 
-
 library(ggplot2)
 library(gridExtra)
 mtc<-mtcars
 
-#Basic scatterplot
+# Basic scatterplot
 p1 <- ggplot(mtc, aes(x = hp, y = mpg))
 
-#print basic plot
+# print basic plot
 p1+geom_point()
 
 #change color of points
@@ -25,7 +24,6 @@ grid.arrange(p2, p3, p4, nrow=1)
 #Change default colors in color scale
 p1 + geom_point(aes(color=factor(am))) + scale_color_manual(values = c("orange", "purple"))
 
-
 #change shape or size points
 p2 <- p1 + geom_point(size = 5)                   #increase all points to size 5
 p3 <- p1 + geom_point(aes(size = wt))             #set point size by continuous variable
@@ -35,7 +33,6 @@ grid.arrange(p2, p3, p4, nrow=1)
 
 #change default shapes
 p1 + geom_point(aes(shape = factor(am))) + scale_shape_manual(values=c(0,2))
-
 
 ####lines, add regressoin line or abline to scatterplot
 
@@ -62,13 +59,10 @@ p3 <- p2 + labs(x="Horsepower",
                 y = "Miles per Gallon")
 
 #label and change font size
-p4 <- p2 + theme(axis.title.x = element_text(face="bold", size=20)) +
-     labs(x="Horsepower")
+p4 <- p2 + theme(axis.title.x = element_text(face="bold", size=20)) + labs(x="Horsepower")
 
 #adjust axis limits and breaks
-p5 <- p2 + scale_x_continuous("Horsepower",
-                              limits=c(0,400),
-                              breaks=seq(0, 400, 50))
+p5 <- p2 + scale_x_continuous("Horsepower", limits=c(0,400), breaks=seq(0, 400, 50))
 
 grid.arrange(p3, p4, p5, nrow=1)
 
@@ -112,14 +106,12 @@ t2<-theme(
      plot.title = element_text(face="bold", color = "black", size=12)
 )
 
-
 g3 <- g2 + t1
 g4 <- g2 + theme_bw()
 g5 <- g2 + theme_bw() + t2 + labs(x="Horsepower", y = "Miles per Gallon", title= "MPG vs Horsepower")
 
 
 grid.arrange(g2, g3, g4, g5, nrow=1)
-
 
 #final graph with combinations of options
 g2<- ggplot(mtc, aes(x = hp, y = mpg)) +
@@ -143,9 +135,6 @@ g2<- ggplot(mtc, aes(x = hp, y = mpg)) +
           title= "Linear Regression (95% CI) of MPG vs Horsepower by Engine type")
 
 g2
-
-
-
 
 ##add text to regression line
 
