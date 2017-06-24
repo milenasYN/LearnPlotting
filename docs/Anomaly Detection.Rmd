@@ -3,13 +3,13 @@ title: "Anomaly Detection"
 output: html_document
 ---
 
-##Introduction
+## Introduction
 Inspired by this Netflix post, I decided to write a post based on this topic using R.
 
 There are several nice packages to achieve this goal, the one we´re going to review is AnomalyDetection.
 Download full –and tiny– R code of this post [here](https://github.com/pablo14/anomaly_detection_post).
 
-##Normal Vs. Abnormal
+## Normal Vs. Abnormal
 
 The definition for abnormal, or outlier, is an element which does not follow the behaviour of the majority.
 Data has noise, same example as a radio which doesn’t have good signal, and you end up listening to some background noise.
@@ -21,7 +21,7 @@ Data has noise, same example as a radio which doesn’t have good signal, and yo
 
 > A good algorithm can detect abnormal points considering the inner noise and leaving it behind. The AnomalyDetectionTs in AnomalyDetection package can perform this task quite well.
 
-##Hands on anomaly detection!
+## Hands on anomaly detection!
 
 In this example, data comes from the well known wikipedia, which offers an API to download from R the daily page views given any {term + language}.
 
