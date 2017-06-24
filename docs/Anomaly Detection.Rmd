@@ -7,7 +7,7 @@ output: html_document
 Inspired by this Netflix post, I decided to write a post based on this topic using R.
 
 There are several nice packages to achieve this goal, the one we´re going to review is AnomalyDetection.
-Download full –and tiny– R code of this post here[https://github.com/pablo14/anomaly_detection_post].
+Download full –and tiny– R code of this post [here](https://github.com/pablo14/anomaly_detection_post).
 
 ##Normal Vs. Abnormal
 
