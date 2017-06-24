@@ -67,7 +67,7 @@ data_anomaly = AnomalyDetectionTs(fifa_data, max_anoms=0.01, direction="pos", pl
 data_anomaly$plot
 dev.off()
 ```
-##About the algorithm
+## About the algorithm
 
 Parameters in algorithm are max_anoms=0.01 (to have a maximum of 0.01% outliers points in final result), and direction="pos" to detect anomalies over (not below) the expected value.
 
@@ -80,16 +80,15 @@ data_anomaly$anoms$perc_diff=round(100*(data_anomaly$anoms$expected_value-data_a
 ## Plot anomalies table
 anomaly_table=data_anomaly$anoms
 ```
-##Discovering anomalies
+## Discovering anomalies
 
 ![](../images/anomaly2.jpg)
 
 Last plot shows a line indicating linear trend over an specific period -clearly decreasing-, and two black circles. It’s interesting to note that these black points were not detected by the algorithm because they are part of a decreasing tendency (noise perhaps?).
 A really nice shot by this algorithm since the focus on detections are on the changes of general patterns. Just take a look at the last detected point in that period, it was a peak that didn’t follow the decreasing pattern (occurred on 2014-07-12).
 
-##Checking with the news
+## Checking with the news
 
 These anomalies with the term fifa are correlated with the news, the first group of anomalies is related with the FIFA World Cup (around Jun/Jul 2014), and the second group centered on May 2015 is related with FIFA scandal.
 
 In the LA Times it can be found a timeline about the scandal, and two important dates –May 27th and 28th-, which are two dates founded by the algorithm.
-
